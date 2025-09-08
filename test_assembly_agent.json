@@ -1,0 +1,75 @@
+{
+  "agent_config": {
+    "agent_name": "AssemblyAI Live Test Agent",
+    "agent_type": "other",
+    "agent_welcome_message": "Hello! I'm using AssemblyAI for real-time speech recognition. Let's have a conversation!",
+    "tasks": [
+      {
+        "task_type": "conversation",
+        "toolchain": {
+          "execution": "parallel",
+          "pipelines": [
+            [
+              "transcriber",
+              "llm",
+              "synthesizer"
+            ]
+          ]
+        },
+        "tools_config": {
+          "input": {
+            "format": "wav",
+            "provider": "twilio"
+          },
+          "llm_agent": {
+            "agent_type": "simple_llm_agent",
+            "agent_flow_type": "streaming",
+            "routes": null,
+            "llm_config": {
+              "agent_flow_type": "streaming",
+              "provider": "openai",
+              "request_json": true,
+              "model": "gpt-3.5-turbo",
+              "max_tokens": 100,
+              "temperature": 0.7
+            }
+          },
+          "output": {
+            "format": "wav",
+            "provider": "twilio"
+          },
+          "synthesizer": {
+            "audio_format": "wav",
+            "provider": "elevenlabs",
+            "stream": true,
+            "provider_config": {
+              "voice": "George",
+              "model": "eleven_turbo_v2_5",
+              "voice_id": "JBFqnCBsd6RMkjVDRZzb"
+            },
+            "buffer_size": 100.0
+          },
+          "transcriber": {
+            "encoding": "linear16",
+            "language": "en",
+            "provider": "assembly",
+            "stream": true,
+            "sampling_rate": 16000,
+            "model": "best",
+            "end_of_turn_confidence_threshold": 0.8,
+            "format_turns": true
+          }
+        },
+        "task_config": {
+          "hangup_after_silence": 30.0,
+          "optimize_latency": true
+        }
+      }
+    ]
+  },
+  "agent_prompts": {
+    "task_1": {
+      "system_prompt": "You are a helpful AI assistant using AssemblyAI's advanced speech recognition. Be conversational, friendly, and occasionally mention that you can understand speech very clearly thanks to AssemblyAI's technology. Keep responses concise and engaging."
+    }
+  }
+}
